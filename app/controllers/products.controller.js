@@ -3,20 +3,22 @@ const Product = db.products;
 
 // Create and Save a new Product
 exports.create = (req, res) => {
-  if (!req.body.title) {
-    res.status(400).send({ message: "Content can not be empty!" });
+  if (!req.body.name) {
+    res.status(400).send({ message: "name can not be empty!" });
     return;
   }
 
   // Create a Product
-  const Product = new Product({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published ? req.body.published : false,
+  const newProduct = new Product({
+    name: req.body.name,
+    imageUrl: req.body.description,
+    amount: req.body.amount,
+    currency: req.body.currency,
   });
 
   // Save Product in the database
-  Product.save(Product)
+  newProduct
+    .save()
     .then((data) => {
       res.send(data);
     })
@@ -30,12 +32,12 @@ exports.create = (req, res) => {
 
 // Retrieve all Products from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title
-    ? { title: { $regex: new RegExp(title), $options: "i" } }
+  const name = req.query.name;
+  var condition = name
+    ? { title: { $regex: new RegExp(name), $options: "i" } }
     : {};
 
-  Product.find(condition)
+  Product.find({})
     .then((data) => {
       res.send(data);
     })
@@ -129,8 +131,10 @@ exports.deleteAll = (req, res) => {
 };
 
 // Find all published Products
-exports.findAllPublished = (req, res) => {
-  Product.find({ published: true })
+exports.findByCurrency = (req, res) => {
+  const currency = req.params.currency;
+
+  Product.find({ currency: currency })
     .then((data) => {
       res.send(data);
     })
