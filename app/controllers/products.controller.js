@@ -1,5 +1,22 @@
 const db = require("../models");
 const Product = db.products;
+const { faker } = require("@faker-js/faker");
+
+exports.populate = (req, res) => {
+  const amount = req.params.amount;
+
+  for (let i = 0; i < amount; i++) {
+    let pro = new Product({
+      name: faker.commerce.product(),
+      imageUrl: faker.image.urlLoremFlickr({ width: 1024, height: 768 }),
+      amount: faker.commerce.price({ min: 500, max: 40000 }),
+      currency: faker.finance.currencyCode(),
+    });
+    pro.save();
+  }
+
+  res.status(200).send({ message: "All produts succesfully added!" });
+};
 
 // Create and Save a new Product
 exports.create = (req, res) => {
@@ -39,7 +56,7 @@ exports.findAll = (req, res) => {
 
   Product.find({})
     .then((data) => {
-      res.send(data);
+      res.json(data);
     })
     .catch((err) => {
       res.status(500).send({

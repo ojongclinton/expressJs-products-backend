@@ -4,7 +4,7 @@ module.exports = (mongoose) => {
     mongoose.Schema(
       {
         name: String,
-        iamgeUrl: String,
+        imageUrl: String,
         amount: Number,
         currency: String,
       },
